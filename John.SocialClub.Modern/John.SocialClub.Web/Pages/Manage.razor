@@ -1,0 +1,292 @@
+@page "/manage"
+@using Microsoft.AspNetCore.Components.Forms
+@using John.SocialClub.Domain
+@using John.SocialClub.Web.Services
+@inject IHttpClientFactory HttpFactory
+@inject AuthState Auth
+@inject NavigationManager Nav
+
+@if (!Auth.IsAuthenticated)
+{
+    @* Redirect to login if not authenticated *@
+    Nav.NavigateTo("/login", true);
+}
+else
+{
+    <div class="manage-wrapper" style="background-color:#c5d4e3; min-height:85vh; padding:1rem;">
+        <h2 class="text-center mb-3">Social club</h2>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab==0?"active":"")" @onclick="(()=>activeTab=0)" type="button" role="tab">New Registration</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab==1?"active":"")" @onclick="(()=>activeTab=1)" type="button" role="tab">Search / Manage Members</button>
+            </li>
+        </ul>
+
+        <div class="tab-content p-3 border border-top-0 bg-white">
+            @if (activeTab == 0)
+            {
+                <div>
+                    <h5>Member</h5>
+                    <EditForm Model="_newMember" OnValidSubmit="Register">
+                        <DataAnnotationsValidator />
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Name <span class="text-danger">*</span></label>
+                                <InputText class="form-control" @bind-Value="_newMember.Name" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Marital status <span class="text-danger">*</span></label>
+                                <InputSelect class="form-select" @bind-Value="_newMember.MaritalStatus">
+                                    <option value>-- select --</option>
+                                    @foreach (var s in Enum.GetValues<MaritalStatus>()) { <option value="@s">@s</option> }
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Health status <span class="text-danger">*</span></label>
+                                <InputSelect class="form-select" @bind-Value="_newMember.HealthStatus">
+                                    <option value>-- select --</option>
+                                    @foreach (var h in Enum.GetValues<HealthStatus>()) { <option value="@h">@h</option> }
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date of birth</label>
+                                <InputDate class="form-control" @bind-Value="_newMember.DateOfBirth" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Occupation <span class="text-danger">*</span></label>
+                                <InputSelect class="form-select" @bind-Value="_newMember.Occupation">
+                                    <option value>-- select --</option>
+                                    @foreach (var o in Enum.GetValues<Occupation>()) { <option value="@o">@o</option> }
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">No. of children</label>
+                                <InputNumber class="form-control" @bind-Value="_newMember.NumberOfChildren" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Salary</label>
+                                <InputNumber class="form-control" @bind-Value="_newMember.Salary" />
+                            </div>
+                            <div class="col-12 d-flex justify-content-center mt-2">
+                                <button class="btn btn-primary px-5" type="submit">Register</button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h5>Search</h5>
+                    <div class="row g-2 align-items-end mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Occupation</label>
+                            <select class="form-select" @bind="_searchOcc">
+                                <option value="">-- any --</option>
+                                @foreach (var o in Enum.GetValues<Occupation>()) { <option value="@((int)o)">@o</option> }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">AND / OR</label>
+                            <select class="form-select" @bind="_searchAndOr">
+                                <option>AND</option>
+                                <option>OR</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Marital status</label>
+                            <select class="form-select" @bind="_searchMar">
+                                <option value="">-- any --</option>
+                                @foreach (var s in Enum.GetValues<MaritalStatus>()) { <option value="@((int)s)">@s</option> }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary me-2" @onclick="Search">Search</button>
+                            <button class="btn btn-secondary" @onclick="Refresh">Refresh</button>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-lg-8">
+                            <div class="mb-2">
+                                <button class="btn btn-outline-secondary me-2" @onclick="PrintPreview">Print preview</button>
+                                <button class="btn btn-outline-secondary me-2" @onclick="Print">Print</button>
+                                <a class="btn btn-outline-secondary" href="/api/members/export" target="_blank">Export</a>
+                            </div>
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>DateOfBirth</th>
+                                        <th>Occupation</th>
+                                        <th>MaritalStatus</th>
+                                        <th>HealthStatus</th>
+                                        <th>Salary</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var m in _members)
+                                {
+                                    <tr class="@(m.Id==_selected?.Id?"table-primary":"")" @onclick="(()=>Select(m))" style="cursor:pointer;">
+                                        <td>@m.Id</td>
+                                        <td>@m.Name</td>
+                                        <td>@m.DateOfBirth.ToString("dd-MM-yyyy")</td>
+                                        <td>@m.Occupation</td>
+                                        <td>@m.MaritalStatus</td>
+                                        <td>@m.HealthStatus</td>
+                                        <td>@(m.Salary==0? "": m.Salary.ToString("F2"))</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card card-body">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label class="form-label">Name <span class="text-danger">*</span></label>
+                                        <InputText class="form-control" @bind-Value="_edit.Name" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Date of Birth</label>
+                                        <InputDate class="form-control" @bind-Value="_edit.DateOfBirth" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Occupation <span class="text-danger">*</span></label>
+                                        <InputSelect class="form-select" @bind-Value="_edit.Occupation">
+                                            @foreach (var o in Enum.GetValues<Occupation>()) { <option value="@o">@o</option> }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Salary</label>
+                                        <InputNumber class="form-control" @bind-Value="_edit.Salary" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Marital status <span class="text-danger">*</span></label>
+                                        <InputSelect class="form-select" @bind-Value="_edit.MaritalStatus">
+                                            @foreach (var s in Enum.GetValues<MaritalStatus>()) { <option value="@s">@s</option> }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Health status <span class="text-danger">*</span></label>
+                                        <InputSelect class="form-select" @bind-Value="_edit.HealthStatus">
+                                            @foreach (var h in Enum.GetValues<HealthStatus>()) { <option value="@h">@h</option> }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">No. of children</label>
+                                        <InputNumber class="form-control" @bind-Value="_edit.NumberOfChildren" />
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-end mt-2">
+                                        <button class="btn btn-primary me-2" @onclick="Update" disabled="@(_edit.Id==0)">Update</button>
+                                        <button class="btn btn-danger" @onclick="Delete" disabled="@(_edit.Id==0)">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private int activeTab = 0;
+    private List<Member> _members = new();
+    private Member _newMember = new() { DateOfBirth = DateTime.Today };
+    private Member _edit = new();
+    private Member? _selected;
+    private string _searchAndOr = "AND";
+    private string? _searchOcc;
+    private string? _searchMar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Auth.IsAuthenticated)
+            await LoadMembers();
+    }
+
+    private async Task LoadMembers()
+    {
+        var client = HttpFactory.CreateClient("api");
+        _members = await client.GetFromJsonAsync<List<Member>>("/api/members") ?? new();
+        StateHasChanged();
+    }
+
+    private async Task Register()
+    {
+        var client = HttpFactory.CreateClient("api");
+        var resp = await client.PostAsJsonAsync("/api/members", _newMember);
+        if (resp.IsSuccessStatusCode)
+        {
+            _newMember = new() { DateOfBirth = DateTime.Today };
+            await LoadMembers();
+        }
+    }
+
+    private async Task Search()
+    {
+        var client = HttpFactory.CreateClient("api");
+        var query = new List<string>();
+        if (!string.IsNullOrEmpty(_searchOcc)) query.Add($"occupation={_searchOcc}");
+        if (!string.IsNullOrEmpty(_searchMar)) query.Add($"maritalStatus={_searchMar}");
+        query.Add($"and={(_searchAndOr=="AND").ToString().ToLower()}");
+        var url = "/api/members/search" + (query.Count>0? ("?"+string.Join("&", query)) : "");
+        _members = await client.GetFromJsonAsync<List<Member>>(url) ?? new();
+    }
+
+    private async Task Refresh()
+    {
+        _searchOcc = _searchMar = null;
+        _searchAndOr = "AND";
+        await LoadMembers();
+    }
+
+    private void Select(Member m)
+    {
+        _selected = m;
+        _edit = new Member
+        {
+            Id = m.Id,
+            Name = m.Name,
+            DateOfBirth = m.DateOfBirth,
+            Occupation = m.Occupation,
+            MaritalStatus = m.MaritalStatus,
+            HealthStatus = m.HealthStatus,
+            Salary = m.Salary,
+            NumberOfChildren = m.NumberOfChildren
+        };
+    }
+
+    private async Task Update()
+    {
+        if (_edit.Id == 0) return;
+        var client = HttpFactory.CreateClient("api");
+        var resp = await client.PutAsJsonAsync($"/api/members/{_edit.Id}", _edit);
+        if (resp.IsSuccessStatusCode)
+        {
+            await LoadMembers();
+        }
+    }
+
+    private async Task Delete()
+    {
+        if (_edit.Id == 0) return;
+        var client = HttpFactory.CreateClient("api");
+        var resp = await client.DeleteAsync($"/api/members/{_edit.Id}");
+        if (resp.IsSuccessStatusCode)
+        {
+            _edit = new();
+            await LoadMembers();
+        }
+    }
+
+    private void PrintPreview() => Print();
+    private void Print() => JS?.InvokeVoidAsync("printPage");
+
+    [Inject] private IJSRuntime? JS { get; set; }
+}

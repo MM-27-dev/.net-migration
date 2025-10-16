@@ -1,0 +1,21 @@
+# Build artifacts
+bin/
+obj/
+**/bin/
+**/obj/
+
+# VS/VSCode
+.vscode/
+.vs/
+
+# User-specific
+*.user
+*.suo
+*.userprefs
+
+# Logs
+*.log
+
+# Publish
+**/wwwroot/dist/
+**/publish/

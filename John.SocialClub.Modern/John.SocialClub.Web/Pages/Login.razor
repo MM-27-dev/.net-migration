@@ -1,0 +1,90 @@
+@page "/login"
+@using John.SocialClub.Web.Services
+@inject AuthState Auth
+@inject NavigationManager Nav
+@inject IHttpClientFactory ClientFactory
+
+<div class="d-flex justify-content-center py-5" style="background-color:#c5d4e3; min-height:70vh;">
+    <div class="card p-4" style="width:380px;">
+        <h4 class="text-center mb-3">Social club - Login</h4>
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="alert alert-danger py-2">@_error</div>
+        }
+        <EditForm Model="this" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label class="form-label">Username:</label>
+                <InputText class="form-control" @bind-Value="_username" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password:</label>
+                <InputText class="form-control" type="password" @bind-Value="_password" />
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Login</button>
+        </EditForm>
+    </div>
+    
+</div>
+
+@code {
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private string _error = string.Empty;
+
+    private bool _isSubmitting = false;
+
+    private async Task HandleLogin()
+    {
+        _error = string.Empty;
+        if (string.IsNullOrWhiteSpace(_username) || string.IsNullOrWhiteSpace(_password))
+        {
+            _error = "Username and password are required.";
+            return;
+        }
+        _isSubmitting = true;
+        try
+        {
+            var client = ClientFactory.CreateClient("api");
+            var payload = new LoginRequest { Username = _username, Password = _password };
+            var response = await client.PostAsJsonAsync("api/auth/login", payload);
+            if (response.IsSuccessStatusCode)
+            {
+                var loginResp = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                if (loginResp is not null && Auth.Login(_username, _password))
+                {
+                    Nav.NavigateTo("/manage");
+                    return;
+                }
+                _error = "Unexpected login response.";
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                _error = "Invalid username or password.";
+            }
+            else
+            {
+                _error = $"Login failed: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = $"Error contacting server: {ex.Message}";
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    public class LoginRequest
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+    public class LoginResponse
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+    }
+}

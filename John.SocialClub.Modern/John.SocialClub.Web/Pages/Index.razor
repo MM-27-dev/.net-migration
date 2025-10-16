@@ -1,0 +1,10 @@
+@page "/"
+@inject John.SocialClub.Web.Services.AuthState Auth
+@inject NavigationManager Nav
+
+@code {
+	protected override void OnInitialized()
+	{
+		Nav.NavigateTo(Auth.IsAuthenticated ? "/manage" : "/login", true);
+	}
+}

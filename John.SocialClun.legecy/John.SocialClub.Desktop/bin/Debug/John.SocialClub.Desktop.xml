@@ -1,0 +1,455 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>John.SocialClub.Desktop</name>
+    </assembly>
+    <members>
+        <member name="T:John.SocialClub.Desktop.Forms.Membership.Manage">
+            <summary>
+            Manage screen - To view, search, print, export club members information
+            </summary>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Forms.Membership.Manage.dataGridViewPrinter">
+            <summary>
+            Instance of DataGridViewPrinter
+            </summary>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Forms.Membership.Manage.clubMemberService">
+            <summary>
+            Interface of ClubMemberService
+            </summary>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Forms.Membership.Manage.errorMessage">
+            <summary>
+            Variable to store error message
+            </summary>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Forms.Membership.Manage.memberId">
+            <summary>
+            Member id
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.#ctor">
+            <summary>
+            Initializes a new instance of the Manage class
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.InitializeResourceString">
+            <summary>
+            Initializes resource strings
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.InitializeDropDownList">
+            <summary>
+            Initializes all dropdown controls
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ResetSearch">
+            <summary>
+            Resets search criteria
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ResetRegistration">
+            <summary>
+            Resets the registration screen
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.InitializeUpdate">
+            <summary>
+            Initializes all dropdown controls in update section
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ResetUpdate">
+            <summary>
+            Resets the update section of manage screen
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ValidateRegistration">
+            <summary>
+            Validates registration input
+            </summary>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ValidateUpdate">
+            <summary>
+            Validates update data
+            </summary>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.AddErrorMessage(System.String)">
+            <summary>
+            To generate the error message
+            </summary>
+            <param name="error">error message</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.ShowErrorMessage(System.Exception)">
+            <summary>
+            Method to show general error message on any system level exception
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.InitilizeDataGridViewStyle">
+            <summary>
+            Initializes data grid view style
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.LoadDataGridView(System.Data.DataTable)">
+            <summary>
+            Method to load data grid view
+            </summary>
+            <param name="data">data table</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.SetupPrinting(System.Boolean)">
+            <summary>
+            Method to set up the printing
+            </summary>
+            <param name="isPrint">isPrint value</param>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Register_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle registration
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Salary_KeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Key press Event to accept only numeric value
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">key press event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Children_KeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Key press Event to accept only numeric value
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Tab_SelectedIndexChanged(System.Object,System.EventArgs)">
+            <summary>
+            Event to handle tab selection
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.DataGridView_CellFormatting(System.Object,System.Windows.Forms.DataGridViewCellFormattingEventArgs)">
+            <summary>
+            Event to handle the data formatting in data grid view
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Search_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle search
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Refresh_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle the refresh
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.PrintPreview_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle print preview
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Print_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle print
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.PrintDocument_PrintPage(System.Object,System.Drawing.Printing.PrintPageEventArgs)">
+            <summary>
+            Event to handle print page
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Export_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle the export to excel
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.btnUpdate_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to update the data
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event args</param>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Forms.Membership.Manage.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Forms.Membership.Manage.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:John.SocialClub.Desktop.Login">
+            <summary>
+            Login form
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Login.#ctor">
+            <summary>
+            Initializes a new instance of the Login class
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Login.InitializeResourceString">
+            <summary>
+            Initializes resource strings
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Login.Login_Click(System.Object,System.EventArgs)">
+            <summary>
+            Click event to handle the login process
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">event data</param>
+        </member>
+        <member name="F:John.SocialClub.Desktop.Login.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Login.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Login.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:John.SocialClub.Desktop.Program.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:John.SocialClub.Desktop.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Delete_Button_Text">
+            <summary>
+              Looks up a localized string similar to Delete.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Delete_Successful_Message">
+            <summary>
+              Looks up a localized string similar to Member details deleted successfully.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Delete_Successful_Message_Title">
+            <summary>
+              Looks up a localized string similar to Delete successfull.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Error_Message_Header">
+            <summary>
+              Looks up a localized string similar to Please check the following..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Export_Button_Text">
+            <summary>
+              Looks up a localized string similar to Export.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Login_Login_Button_Text">
+            <summary>
+              Looks up a localized string similar to Login.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Login_Password_Label_Text">
+            <summary>
+              Looks up a localized string similar to Password:.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Login_Username_Label_Text">
+            <summary>
+              Looks up a localized string similar to Username:.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Login_Validation_Message">
+            <summary>
+              Looks up a localized string similar to Please enter a valid username and password..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Login_Validation_Message_Title">
+            <summary>
+              Looks up a localized string similar to Login - Message.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Print_Print_Button_Text">
+            <summary>
+              Looks up a localized string similar to Print.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Print_PrintPreview_Button_Text">
+            <summary>
+              Looks up a localized string similar to Print preview.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Children_Label_Text">
+            <summary>
+              Looks up a localized string similar to No. of children.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_DateOfBirth_Label_Text">
+            <summary>
+              Looks up a localized string similar to Date of birth.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Error_Message">
+            <summary>
+              Looks up a localized string similar to Registration failed.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Error_Message_Title">
+            <summary>
+              Looks up a localized string similar to Registration error.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_HealthStatus_Label_Text">
+            <summary>
+              Looks up a localized string similar to Health status.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_HealthStatus_Select_Text">
+            <summary>
+              Looks up a localized string similar to Please select health status..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_MaritalStatus_Label_Text">
+            <summary>
+              Looks up a localized string similar to Marital status.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_MaritalStatus_Select_Text">
+            <summary>
+              Looks up a localized string similar to Please select marital status..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Name_Label_Text">
+            <summary>
+              Looks up a localized string similar to Name.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Name_Required_Text">
+            <summary>
+              Looks up a localized string similar to Name is required..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Occupation_Label_Text">
+            <summary>
+              Looks up a localized string similar to Occupation.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Occupation_Select_Text">
+            <summary>
+              Looks up a localized string similar to Please select a occupation..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Register_Button_Text">
+            <summary>
+              Looks up a localized string similar to Register.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Salary_Label_Text">
+            <summary>
+              Looks up a localized string similar to Salary.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Successful_Message">
+            <summary>
+              Looks up a localized string similar to New member registered successfully!.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Registration_Successful_Message_Title">
+            <summary>
+              Looks up a localized string similar to Registration Successful.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Report_Header">
+            <summary>
+              Looks up a localized string similar to Social Member Club - Members.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Search_Refresh_Button_Text">
+            <summary>
+              Looks up a localized string similar to Refresh.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Search_Search_Button_Text">
+            <summary>
+              Looks up a localized string similar to Search.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.System_Error_Message">
+            <summary>
+              Looks up a localized string similar to Oops! System error. Please contact administrator..
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.System_Error_Message_Title">
+            <summary>
+              Looks up a localized string similar to Error - Message.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Update_Button_Text">
+            <summary>
+              Looks up a localized string similar to Update.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Update_Error_Message_Title">
+            <summary>
+              Looks up a localized string similar to Update error.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Update_Successful_Message">
+            <summary>
+              Looks up a localized string similar to Member details updated successfully.
+            </summary>
+        </member>
+        <member name="P:John.SocialClub.Desktop.Properties.Resources.Update_Successful_Message_Title">
+            <summary>
+              Looks up a localized string similar to Update successfull.
+            </summary>
+        </member>
+    </members>
+</doc>
